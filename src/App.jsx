@@ -1,26 +1,46 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import Navbar from './components/Navbar'
+import Hero from './components/Hero'
+import HowItWorks from './components/HowItWorks'
+import Pricing from './components/Pricing'
+import Features from './components/Features'
+import Portfolio from './components/Portfolio'
+import Testimonials from './components/Testimonials'
+import FAQ from './components/FAQ'
+import Footer from './components/Footer'
+import SubscribeModal from './components/SubscribeModal'
+import UpdateRequest from './components/UpdateRequest'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [open, setOpen] = useState(false)
+  const [plan, setPlan] = useState('growth')
+
+  const openSubscribe = (slug = 'growth') => {
+    setPlan(slug)
+    setOpen(true)
+  }
+
+  useEffect(() => {
+    if (!import.meta.env.VITE_BACKEND_URL) {
+      console.warn('VITE_BACKEND_URL is not set. Set it to your backend URL.')
+    }
+  }, [])
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 flex items-center justify-center">
-      <div className="bg-white p-8 rounded-lg shadow-lg">
-        <h1 className="text-3xl font-bold text-gray-800 mb-4">
-          Vibe Coding Platform
-        </h1>
-        <p className="text-gray-600 mb-6">
-          Your AI-powered development environment
-        </p>
-        <div className="text-center">
-          <button
-            onClick={() => setCount(count + 1)}
-            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded"
-          >
-            Count is {count}
-          </button>
-        </div>
-      </div>
+    <div className="min-h-screen bg-white">
+      <Navbar onOpenSubscribe={() => openSubscribe()} />
+      <main>
+        <Hero onOpenSubscribe={() => openSubscribe()} />
+        <HowItWorks />
+        <Pricing onOpenSubscribe={(slug)=>openSubscribe(slug)} />
+        <Features />
+        <Portfolio />
+        <Testimonials />
+        <FAQ />
+      </main>
+      <Footer />
+      <SubscribeModal open={open} onClose={()=>setOpen(false)} defaultPlan={plan} />
+      <UpdateRequest />
     </div>
   )
 }
